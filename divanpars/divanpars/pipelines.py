@@ -1,13 +1,14 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+import csv
 
+class LightPipeline:
+    def open_spider(self, light):
+        self.file = open('light.csv', 'w', newline='', encoding='utf-8')
+        self.writer = csv.writer(self.file)
+        self.writer.writerow(['Наименование', 'Цена', 'Ссылка'])
 
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
+    def close_spider(self, light):
+        self.file.close()
 
-
-class DivanparsPipeline:
-    def process_item(self, item, spider):
+    def process_item(self, item, light):
+        self.writer.writerow([item['name'], item['price'], item['url']])
         return item
